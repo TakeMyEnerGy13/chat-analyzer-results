@@ -60,16 +60,15 @@
   h1 em { font-style: italic; color: var(--right); }
   .lede { color: var(--muted); max-width: 62ch; margin-top: 18px; font-size: 15.5px; }
 
-  .impl { margin-top: 26px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(180deg, var(--panel), var(--bg)); overflow: hidden; }
-  .impl > summary { list-style: none; cursor: pointer; padding: 16px 20px; display: flex; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .04em; color: var(--ink); user-select: none; }
-  .impl > summary::-webkit-details-marker { display: none; }
-  .impl > summary .plus { margin-left: auto; color: var(--muted); transition: transform .3s ease; font-size: 18px; }
-  .impl[open] > summary .plus { transform: rotate(45deg); }
-  .impl .body { padding: 4px 20px 22px; border-top: 1px solid var(--line); display: grid; gap: 18px; }
-  .impl h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--right); margin-bottom: 7px; }
-  .impl .body > div:nth-child(2) h3 { color: var(--left); }
-  .impl p { color: var(--muted); font-size: 14px; max-width: 78ch; }
-  .impl b { color: var(--ink); font-weight: 600; }
+  .impl-block { margin: 30px 0 0; }
+  .impl-block .il-title { font-size: clamp(24px, 3.4vw, 36px); }
+  .il-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 36px; margin-top: 4px; }
+  .il-sub { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 8px; }
+  .il-sub.r { color: var(--right); }
+  .il-sub.l { color: var(--left); }
+  .il-cols p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+  .il-cols b { color: var(--ink); font-weight: 600; }
+  @media (max-width: 720px) { .il-cols { grid-template-columns: 1fr; } }
 
   .card { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); overflow: hidden; display: grid; grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr); box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
   .card-index { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .2em; color: var(--faint); margin: 56px 0 16px; display: flex; align-items: center; gap: 14px; }
@@ -163,19 +162,20 @@
       <div class="kicker reveal d1"><span class="dot"></span> Тестовое задание · прогон workflow</div>
       <h1 class="reveal d2">Chat Screenshot<br />Analyzer — <em>результаты</em></h1>
       <p class="lede reveal d3">Каждый присланный скриншот прогнан через n8n-воркфлоу. Слева — исходник, справа — результат. По умолчанию открыт <b style="color:var(--ink)">сырой вывод</b> воркфлоу в формате ТЗ; тумблер <b style="color:var(--ink)">«Разбор»</b> показывает тот же результат в наглядном виде.</p>
-      <details class="impl reveal d4">
-        <summary>Как реализовано определение сторон и платформы <span class="plus">+</span></summary>
-        <div class="body">
+      <section class="interlude impl-block reveal d4">
+        <div class="il-kicker">Как реализовано</div>
+        <h2 class="il-title">Как определяются стороны и платформа</h2>
+        <div class="il-cols">
           <div>
-            <h3>Стороны переписки</h3>
-            <p>Автор каждого сообщения определяется <b>только по горизонтальному выравниванию пузыря</b>: прижат к правому краю → владелец переписки (<b>ПРАВО</b>), к левому → собеседник (<b>ЛЕВО</b>). Цвет пузыря не используется намеренно — при кастомных темах он произвольный, а выравнивание остаётся инвариантом. Модель возвращает сторону как <b>left/right</b> через structured output (function-calling), а не свободным текстом.</p>
+            <h3 class="il-sub r">Стороны переписки</h3>
+            <p>Автор каждого сообщения определяется <b>только по горизонтальному выравниванию пузыря</b>: прижат к правому краю → владелец переписки (<b>ПРАВО</b>), к левому → собеседник (<b>ЛЕВО</b>). Цвет пузыря не используется намеренно — при кастомных темах он произвольный, а выравнивание остаётся инвариантом. Сторона возвращается строго как <b>left / right</b>, а не свободным текстом.</p>
           </div>
           <div>
-            <h3>Платформа</h3>
-            <p>Распознаётся по <b>UI-сигнатурам</b> (шапка + строка ввода), а не по умолчанию: Telegram (плоские пузыри, галочки, скрепка), WhatsApp (хвостики, двойные галочки, дудл-фон), Instagram Direct (ник вместо имени, камера в строке ввода, градиентные пузыри), Tinder, Twinby («% совпадения», дейтинг). Поле <b>platform_type</b> делит на мессенджер / сайт знакомств. Недостаточно улик → <b>unknown</b>, без угадывания.</p>
+            <h3 class="il-sub l">Платформа</h3>
+            <p>Распознаётся по <b>UI-сигнатурам</b> (шапка + строка ввода), а не по умолчанию: Telegram (плоские пузыри, галочки, скрепка), WhatsApp (хвостики, двойные галочки, дудл-фон), Instagram Direct (ник вместо имени, камера в строке ввода, градиентные пузыри), Tinder, Twinby («% совпадения», дейтинг). Поле <b>platform_type</b> делит на мессенджер / сайт знакомств; недостаточно улик → <b>unknown</b>, без угадывания.</p>
           </div>
         </div>
-      </details>
+      </section>
     </header>
 
     <div class="card-index reveal">01 / Telegram · Кастомная тема Telegram</div>
