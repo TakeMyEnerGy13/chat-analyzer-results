@@ -336,6 +336,18 @@ function cardHtml(c) {
     </article>`;
 }
 
+/* ---------- повествовательный блок (после 7-й карточки) ---------- */
+const INTERLUDE_AFTER = "07";
+const interlude = `
+    <section class="interlude reveal">
+      <div class="il-kicker">Как это работает</div>
+      <h2 class="il-title">Скриншот заходит — разбор выходит</h2>
+      <div class="il-body">
+        <p>Каждый разбор на этой странице — не ручная работа, а результат <b>автоматического прогона</b>. Внутри — workflow, который «читает» картинку переписки и сам собирает результат в строгом формате: платформа, кто где находится, и размеченные по порядку сообщения. Человек ничего не печатает руками — нужно только дать скриншот.</p>
+        <p>Чтобы прогонять скрины было удобно, я <b>поднял Telegram-бота</b>: отправляешь ему фото переписки — в ответ прилетает готовый разбор. Все карточки на этой странице собраны именно так — вживую, через бота, а не подготовлены вручную.</p>
+      </div>
+    </section>`;
+
 /* ---------- страница ---------- */
 const CSS = fs.readFileSync(new URL("./style.css", import.meta.url), "utf8");
 const page = `<!DOCTYPE html>
@@ -370,7 +382,7 @@ ${CSS}</style>
         </div>
       </details>
     </header>
-${cards.map(cardHtml).join("\n")}
+${cards.map((c) => cardHtml(c) + (c.id === INTERLUDE_AFTER ? interlude : "")).join("\n")}
     <footer class="foot">
       <span>n8n · Gemini vision · structured output</span>
       <span>${String(cards.length).padStart(2, "0")} карточек</span>

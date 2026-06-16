@@ -125,6 +125,14 @@
   .raw-out .r { color: var(--right); }
   .raw-out .l { color: var(--left); }
 
+  .interlude { margin: 72px 0 4px; border: 1px solid var(--line); border-radius: 18px; padding: clamp(28px, 4vw, 46px); background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--right) 8%, transparent), transparent 58%), var(--panel); position: relative; overflow: hidden; }
+  .interlude::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(var(--right), var(--left)); }
+  .il-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--right); }
+  .il-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4.5vw, 46px); line-height: 1.04; letter-spacing: -.01em; color: var(--ink); margin: 12px 0 20px; }
+  .il-body { display: grid; gap: 14px; max-width: 68ch; }
+  .il-body p { color: var(--muted); font-size: 15.5px; line-height: 1.62; }
+  .il-body b { color: var(--ink); font-weight: 600; }
+
   .foot { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 11.5px; color: var(--faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; letter-spacing: .04em; }
 
   .reveal { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
